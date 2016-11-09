@@ -5,3 +5,45 @@
  */
 
 include_once 'compro_instagram.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function compro_instagram_menu() {
+  $items['admin/structure/entity-type/social/instagram/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('compro_instragram_settings'),
+    'file' => 'includes/compro_instagram.admin.inc',
+    'access arguments' => array('administer instagram feature'),
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function compro_instagram_permission() {
+  return array(
+    'administer instagram feature' =>  array(
+      'title' => t('Administer Instagram feature'),
+      'description' => t('Perform administration tasks for Instagram feature.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_cron().
+ */
+function compro_instagram_cron() {
+  // Grab settings.
+  $settings = variable_get('compro_instagram');
+
+  // Grab posts if enabled.
+  if (isset($settings['enable']) && $settings['enable']) {
+    module_load_include('inc', 'compro_instagram', 'includes/compro_instagram.cron');
+    compro_instagram_retrieve_posts($settings);
+  }
+}
