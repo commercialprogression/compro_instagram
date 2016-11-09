@@ -52,7 +52,7 @@ function compro_instagram_create_entities($result) {
     $query = new EntityFieldQuery();
     $query->entityCondition('entity_type', 'social')
       ->entityCondition('bundle', 'instagram')
-      ->fieldCondition('field_instagram_id', 'value', $post->id, '=');
+      ->fieldCondition('field_instagram_id', 'value', $post['id'], '=');
 
     $result = $query->execute();
 
